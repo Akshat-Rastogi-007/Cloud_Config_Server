@@ -3,10 +3,19 @@ spring:
     name: MailForge-ApiGateway
   cloud:
     gateway:
-      server:
-        webflux:
-          routes[0].uri: lb://UserService
+      routes:
+        - id: MailForge-UserService
+          uri: lb://MailForge-UserService
+          predicates:
+            - Path=/app/user/**
 
+        - id: MailForge-UserService-Cache
+          uri: lb://MailForge-UserService
+          predicates:
+            - Path=/app/cache/**
+
+server:
+  port: 8080
 
 eureka:
   client:
